@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dodaj film</title>
+</head>
+
+<body>
+    <h1>Dodaj film</h1>
+    <form id="movieForm">
+        <label for="title">Tytuł:</label><br>
+        <input type="text" id="title" name="title"><br>
+        <label for="length">Długość filmu:</label><br>
+        <input type="text" id="length" name="length"><br><br>
+        <label for="languageid">ID języka:</label><br>
+        <input type="text" id="languageid" name="languageid"><br><br>
+
+        <button type="submit">Dodaj film</button>
+    </form>
+
+    <script>
+        document.getElementById('movieForm').addEventListener('submit', function (event) {
+            event.preventDefault(); // Zapobiega domyślnej akcji formularza
+
+            var formData = new FormData(this);
+
+            fetch('http://localhost:5088/api/movies', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': 'no-cors',
+                },
+                body: JSON.stringify({
+                    Title: formData.get('title'),
+                    Length: formData.get('length'),
+                    LanguageId: formData.get('languageid')
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Odpowiedź z API:', data);
+                    alert('Film został dodany!');
+                })
+                .catch(error => {
+                    console.error('Błąd:', error);
+                    alert('Wystąpił błąd podczas dodawania filmu.');
+                });
+        });
+    </script>
+</body>
+
+</html>
